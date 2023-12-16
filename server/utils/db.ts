@@ -1,5 +1,5 @@
 import fs from 'fs';
-const sql = fs.readFileSync('~/migrations/base.sql').toString();
+const sql = fs.readFileSync('../../migrations/base.sql').toString();
 
 
 import pg from 'pg';
