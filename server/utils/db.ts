@@ -1,6 +1,3 @@
-import fs from 'fs';
-const sql = fs.readFileSync('../../migrations/base.sql').toString();
-
 
 import pg from 'pg';
 import 'dotenv/config';
@@ -17,6 +14,30 @@ const db = new Pool({
 //     password: process.env.DB_PASS,
 //     port: Number(process.env.DB_PORT),
 // })
+
+const sql = `
+CREATE TABLE IF NOT EXISTS settings(                                                                                     
+ maintenance BOOLEAN,                                                                                     
+ maintenanceText TEXT,                                                                                    
+ canvasWidth INT,                                                                                       
+ canvasHeight INT,                                                                                      
+ pixelSize INT                                                                                       
+); 
+
+INSERT INTO settings(maintenance, canvasWidth, canvasHeight, pixelSize) 
+SELECT * FROM (
+ SELECT FALSE, 3000, 2000, 10
+) AS tmp
+WHERE NOT EXISTS (
+ SELECT maintenance FROM settings
+);
+
+CREATE TABLE IF NOT EXISTS grid(
+ x INT,
+ y INT,
+ color VARCHAR(6) CHECK (color ~* '^[a-f0-9]{6}$')
+);
+`;
 
 db.connect((err: any) => {
     if (err) {
