@@ -1,3 +1,7 @@
+import fs from 'fs';
+const sql = fs.readFileSync('~/migrations/base.sql').toString();
+
+
 import pg from 'pg';
 import 'dotenv/config';
 const { Pool } = pg;
@@ -20,6 +24,13 @@ db.connect((err: any) => {
         return
     }
     console.log('[DB] CONNECTED')
+    db.query(sql, (err, res) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        console.log('[DB] SETUP COMPLETE');
+    });
 });
 
 export default db
