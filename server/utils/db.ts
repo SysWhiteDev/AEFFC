@@ -3,17 +3,17 @@ import pg from 'pg';
 import 'dotenv/config';
 const { Pool } = pg;
 
-// const db = new Pool({
-//     connectionString: process.env.POSTGRES_URL + "?sslmode=require",
-// });
-
 const db = new Pool({
-   user: "postgres",
-   host: "localhost",
-   database: "postgres",
-   password: "white",
-   port: 5432,
+    connectionString: process.env.POSTGRES_URL + "?sslmode=require",
 });
+
+// const db = new Pool({
+//    user: "postgres",
+//    host: "localhost",
+//    database: "postgres",
+//    password: "white",
+//    port: 5432,
+// });
 
 
 const sql = `
