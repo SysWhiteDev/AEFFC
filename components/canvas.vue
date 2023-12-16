@@ -105,7 +105,6 @@ export default {
             }
         },
         updateCanvas() {
-            console.log("[CANVAS] Updating canvas");
             const canvas = this.$refs.canvas;
             const ctx = canvas.getContext('2d', { willReadFrequently: true });
             for (let y = 0; y < canvas.height; y += this.pixelSize) {
@@ -125,7 +124,7 @@ export default {
             };
         },
         zoomCanvas(amount) {
-            if (this.zoom + amount > 0.25 && this.zoom + amount < 5) {
+            if (this.zoom + amount > 0.15 && this.zoom + amount < 5) {
                 this.zoom += amount * 2;
             }
         },

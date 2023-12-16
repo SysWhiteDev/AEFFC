@@ -3,17 +3,18 @@ import pg from 'pg';
 import 'dotenv/config';
 const { Pool } = pg;
 
+// const db = new Pool({
+//     connectionString: process.env.POSTGRES_URL + "?sslmode=require",
+// });
+
 const db = new Pool({
-    connectionString: process.env.POSTGRES_URL + "?sslmode=require",
+   user: "postgres",
+   host: "localhost",
+   database: "postgres",
+   password: "white",
+   port: 5432,
 });
 
-// const db = new pg.Client({
-//     user: process.env.DB_USER,
-//     host: process.env.DB_HOST,
-//     database: process.env.DB_NAME,
-//     password: process.env.DB_PASS,
-//     port: Number(process.env.DB_PORT),
-// })
 
 const sql = `
 CREATE TABLE IF NOT EXISTS settings(                                                                                     
@@ -46,6 +47,7 @@ db.connect((err: any) => {
     }
     console.log('[DB] CONNECTED')
     db.query(sql, (err, res) => {
+        console.log('[DB] SETUP STARTED')
         if (err) {
             console.log(err);
             return;
