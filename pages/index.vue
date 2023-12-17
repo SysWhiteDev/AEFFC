@@ -66,6 +66,7 @@ const fetchGrid = async () => {
     } else {
         error.value = true;
     }
+    return;
 }
 
 onMounted(async () => {
@@ -74,7 +75,7 @@ onMounted(async () => {
         if (!canvasStore.value.maintenance) {
             setInterval(async () => {
                 await fetchGrid();
-            }, 500);
+            }, 3000);
         }
     } catch (err) {
         error.value = true;
