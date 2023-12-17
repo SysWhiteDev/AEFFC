@@ -69,12 +69,21 @@ const fetchGrid = async () => {
     return;
 }
 
+const uploadLocalData = async () => {
+    if (canvasStore.value.localData.length === 0) return;
+    await $fetch("/api/placePixel", {
+        method: "POST",
+        body: JSON.stringify(canvasStore.value.localData),
+    });
+}
+
 onMounted(async () => {
     try {
         await fetchSettings();
         if (!canvasStore.value.maintenance) {
             setInterval(async () => {
                 await fetchGrid();
+                await uploadLocalData();
             }, 3000);
         }
     } catch (err) {
@@ -161,6 +170,7 @@ p {
     align-items: center;
     flex-direction: column;
 }
+
 .lds-spinner {
     color: official;
     display: inline-block;
@@ -255,4 +265,5 @@ p {
     100% {
         opacity: 0;
     }
-}</style>
+}
+</style>

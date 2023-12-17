@@ -113,7 +113,7 @@ export default {
                     ctx.fillRect(x, y, this.pixelSize, this.pixelSize);
                 }
             }
-            for (let data of canvasStore.value.data) {
+            for (let data of [...canvasStore.value.data, ...canvasStore.value.localData]) {
                 ctx.fillStyle = '#' + data.color;
                 ctx.fillRect(data.x, data.y, this.pixelSize, this.pixelSize);
             }
@@ -142,22 +142,13 @@ export default {
             const pixelData = ctx.getImageData(pixelX * this.pixelSize, pixelY * this.pixelSize, 1, 1).data;
 
             if (pixelData[3] !== 0 || pixelData[3] !== 255) {
-                await $fetch('/api/placePixel', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        x: pixelX * this.pixelSize,
-                        y: pixelY * this.pixelSize,
-                        color: this.selectedData.color,
-                    }),
-                }).then((res) => {
-                    ctx.fillStyle = `#${this.selectedData.color}`;
-                    ctx.fillRect(pixelX * this.pixelSize, pixelY * this.pixelSize, this.pixelSize, this.pixelSize);
-                }).catch((e) => {
-                    return;
+                canvasStore.value.localData.push({
+                    x: pixelX * this.pixelSize,
+                    y: pixelY * this.pixelSize,
+                    color: this.selectedData.color,
                 });
+                ctx.fillStyle = `#${this.selectedData.color}`;
+                ctx.fillRect(pixelX * this.pixelSize, pixelY * this.pixelSize, this.pixelSize, this.pixelSize);
             }
         },
         handleMouseDown(event) {

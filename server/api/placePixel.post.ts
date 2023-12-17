@@ -2,18 +2,26 @@ import utils from "../utils/utils";
 
 export default defineEventHandler(async (e) => {
     const body = await readBody(e);
-    return new Promise(async (resolve, reject) => {
-        await utils.db.query("INSERT INTO grid(x, y, color) VALUES($1, $2, $3) RETURNING *;", [body.x, body.y, body.color], (err, res) => {
-            if (err) {
+    if (body.length > 0) {
+        return new Promise(async (resolve, reject) => {
+            const promises = body.map(pixel => {
+                return utils.db.query("INSERT INTO grid(x, y, color) VALUES($1, $2, $3) RETURNING *;", [pixel.x, pixel.y, pixel.color]);
+            });
+            try {
+                await Promise.all(promises);
+                resolve({
+                    "status": 'success',
+                });
+            } catch (err) {
                 reject({
                     "status": 'error',
-                    "data": err
                 });
             }
-            resolve({
-                "status": 'success',
-                "data": res.rows[0]
-            });
         });
-    });
+    } else {
+        return {
+            "status": 'error',
+            "data": "No body"
+        };
+    }
 });
