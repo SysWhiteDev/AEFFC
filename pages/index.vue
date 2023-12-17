@@ -81,10 +81,12 @@ onMounted(async () => {
     try {
         await fetchSettings();
         if (!canvasStore.value.maintenance) {
-            setInterval(async () => {
-                await fetchGrid();
-                await uploadLocalData();
+            setInterval(() => {
+                fetchGrid();
             }, 3000);
+            setInterval(() => {
+                uploadLocalData();
+            }, 4000);
         }
     } catch (err) {
         error.value = true;
