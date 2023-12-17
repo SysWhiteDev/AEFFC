@@ -107,12 +107,6 @@ export default {
         updateCanvas() {
             const canvas = this.$refs.canvas;
             const ctx = canvas.getContext('2d', { willReadFrequently: true });
-            for (let y = 0; y < canvas.height; y += this.pixelSize) {
-                for (let x = 0; x < canvas.width; x += this.pixelSize) {
-                    ctx.fillStyle = 'white';
-                    ctx.fillRect(x, y, this.pixelSize, this.pixelSize);
-                }
-            }
             for (let data of [...canvasStore.value.data, ...canvasStore.value.localData]) {
                 ctx.fillStyle = '#' + data.color;
                 ctx.fillRect(data.x, data.y, this.pixelSize, this.pixelSize);
