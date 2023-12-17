@@ -53,6 +53,7 @@ const fetchSettings = async () => {
             maintenanceText.value = canvasStore.value.maintenancetext;
             loading.value = false;
         }
+        await fetchGrid();
     } else {
         error.value = true;
     }
@@ -66,7 +67,6 @@ const fetchGrid = async () => {
     } else {
         error.value = true;
     }
-    return;
 }
 
 const uploadLocalData = async () => {
