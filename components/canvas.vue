@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper" ref="wrapper">
-        <canvas ref="canvas" @mousedown.left="handleMouseDown" @mousemove="handleMouseMove" @mouseup.left="handleMouseUp"
+        <canvas ref="canvas" @mousedown="handleMouseDown" @mousemove="handleMouseMove" @mouseup.left="handleMouseUp"
             @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd"
             :style="`transform: scale(${zoom}) translateX(${this.zoompos ? this.zoompos.x : 0}px) translateY(${this.zoompos ? this.zoompos.y : 0}px);`"></canvas>
         <!-- <div class="timer">
@@ -164,9 +164,10 @@ export default {
             this.dragStart = { x: event.clientX, y: event.clientY };
             this.zoomposStart = { x: this.zoompos.x, y: this.zoompos.y };
             this.isDragging = true;
+            console.log('test');
         },
         handleMouseMove(event) {
-            if (this.isDragging) {
+            if (this.isDragging && event.buttons == 4) {
                 document.body.style.cursor = 'grabbing';
                 this.$refs.canvas.style.cursor = 'grabbing';
                 this.$refs.wrapper.style.cursor = 'grabbing';
