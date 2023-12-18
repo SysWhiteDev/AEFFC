@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS grid(
 );
 `;
 
-db.connect((err: any) => {
+db.connect((err) => {
     if (err) {
         console.log(err);
         return

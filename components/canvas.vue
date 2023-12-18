@@ -3,6 +3,9 @@
         <canvas ref="canvas" @mousedown="handleMouseDown" @mousemove="handleMouseMove" @mouseup.left="handleMouseUp"
             @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd"
             :style="`transform: scale(${zoom}) translateX(${this.zoompos ? this.zoompos.x : 0}px) translateY(${this.zoompos ? this.zoompos.y : 0}px);`"></canvas>
+        <div class="player-count">
+            <span><i class="fa-solid fa-eye"></i>{{ playercount }}</span>
+        </div>
         <!-- <div class="timer">
             <span>3.42s</span>
         </div> -->
@@ -69,13 +72,30 @@ export default {
             selectedData: {
                 color: '000000',
             },
+            playercount: 0,
         };
     },
     mounted() {
         this.$refs.wrapper.addEventListener('wheel', this.handleWheel);
         window.addEventListener('mouseup', this.handleMouseUpOutside);
         this.createCanvas();
-        setInterval(this.updateCanvas, 2500)
+        this.socket = this.$nuxtSocket({
+            name: 'home',
+            reconnection: true
+        });
+        this.socket.on('connect', () => {
+            console.log('connected');
+        });
+        this.socket.on('userCount', (data) => {
+            this.playercount = data;
+        });
+        this.socket
+            .on('getPlace', (data, cb) => {
+                const canvas = this.$refs.canvas;
+                const ctx = canvas.getContext('2d', { willReadFrequently: true });
+                ctx.fillStyle = '#' + data.color;
+                ctx.fillRect(data.x, data.y, this.pixelSize, this.pixelSize);
+            });
     },
     methods: {
         handleMouseUpOutside() {
@@ -100,14 +120,6 @@ export default {
                 }
             }
             for (let data of canvasStore.value.data) {
-                ctx.fillStyle = '#' + data.color;
-                ctx.fillRect(data.x, data.y, this.pixelSize, this.pixelSize);
-            }
-        },
-        updateCanvas() {
-            const canvas = this.$refs.canvas;
-            const ctx = canvas.getContext('2d', { willReadFrequently: true });
-            for (let data of [...canvasStore.value.data, ...canvasStore.value.localData]) {
                 ctx.fillStyle = '#' + data.color;
                 ctx.fillRect(data.x, data.y, this.pixelSize, this.pixelSize);
             }
@@ -143,6 +155,11 @@ export default {
                 });
                 ctx.fillStyle = `#${this.selectedData.color}`;
                 ctx.fillRect(pixelX * this.pixelSize, pixelY * this.pixelSize, this.pixelSize, this.pixelSize);
+                this.socket.emit('setPlace', {
+                    x: pixelX * this.pixelSize,
+                    y: pixelY * this.pixelSize,
+                    color: this.selectedData.color,
+                })
             }
         },
         handleMouseDown(event) {
@@ -396,10 +413,42 @@ export default {
 @media (max-width: 1024px) {
     .zoom-controls {
         position: absolute;
-        top: 10px;
+        bottom: 10px;
         right: 10px;
         left: unset;
-        bottom: unset;
+    }
+}
+
+/* player count */
+.player-count {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgb(255, 255, 255, 0.8);
+    backdrop-filter: blur(4.5px);
+    border-radius: 7px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    padding: 13px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.player-count span {
+    font-weight: bold;
+    text-align: center;
+    font-size: clamp(25px, 5vw, 30px);
+}
+
+.player-count span>i {
+    margin-right: 10px;
+}
+
+@media (max-width: 1024px) {
+    .player-count {
+        top: 10px;
+        right: 10px;
     }
 }
 

@@ -14,8 +14,21 @@ export default defineNuxtConfig({
         { property: 'og:image', content: '/favicon.png' },
       ],
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+        { rel: "stylesheet", href: "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" }
       ]
     }
+  },
+  modules: [
+    'nuxt-socket-io'
+  ],
+  io: {
+    sockets: [
+      {
+        name: 'home',
+        url: 'http://localhost:3000',
+        default: true,
+      }
+    ]
   }
 })

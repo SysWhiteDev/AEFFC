@@ -69,24 +69,11 @@ const fetchGrid = async () => {
     }
 }
 
-const uploadLocalData = async () => {
-    if (canvasStore.value.localData.length === 0) return;
-    await $fetch("/api/placePixel", {
-        method: "POST",
-        body: JSON.stringify(canvasStore.value.localData),
-    });
-}
-
 onMounted(async () => {
     try {
         await fetchSettings();
         if (!canvasStore.value.maintenance) {
-            setInterval(() => {
                 fetchGrid();
-            }, 3000);
-            setInterval(() => {
-                uploadLocalData();
-            }, 4000);
         }
     } catch (err) {
         error.value = true;
