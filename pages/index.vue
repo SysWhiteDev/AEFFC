@@ -42,7 +42,7 @@ const maintenance = ref(false);
 const maintenanceText = ref("");
 
 const fetchSettings = async () => {
-    const res = await $fetch(`${runtimeConfig.public.apiBase}getSettings`);
+    const res = await $fetch(`${runtimeConfig.public.apiBase}/api/getSettings`);
     if (res && res.status === "success") {
         canvasStore.value.width = res.data[0].canvaswidth;
         canvasStore.value.height = res.data[0].canvasheight;
@@ -61,7 +61,7 @@ const fetchSettings = async () => {
 }
 
 const fetchGrid = async () => {
-    const gridRes = await $fetch(`${runtimeConfig.public.apiBase}getGrid`);
+    const gridRes = await $fetch(`${runtimeConfig.public.apiBase}/api/getGrid`);
     if (gridRes && gridRes.status === "success") {
         canvasStore.value.data = gridRes.data;
         loading.value = false;
