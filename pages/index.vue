@@ -33,6 +33,7 @@
 </template>
 
 <script setup>
+const runtimeConfig = useRuntimeConfig();
 import canvasStore from '~/stores/canvasStore';
 
 const loading = ref(true);
@@ -41,7 +42,7 @@ const maintenance = ref(false);
 const maintenanceText = ref("");
 
 const fetchSettings = async () => {
-    const res = await $fetch("/api/getSettings");
+    const res = await $fetch(`${runtimeConfig.public.apiBase}getSettings`);
     if (res && res.status === "success") {
         canvasStore.value.width = res.data[0].canvaswidth;
         canvasStore.value.height = res.data[0].canvasheight;
@@ -60,7 +61,7 @@ const fetchSettings = async () => {
 }
 
 const fetchGrid = async () => {
-    const gridRes = await $fetch("/api/getGrid");
+    const gridRes = await $fetch(`${runtimeConfig.public.apiBase}getGrid`);
     if (gridRes && gridRes.status === "success") {
         canvasStore.value.data = gridRes.data;
         loading.value = false;

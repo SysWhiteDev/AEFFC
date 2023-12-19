@@ -1,7 +1,11 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: false },
   css: ['~/assets/styles/main.css'],
+  runtimeConfig: {
+    public: {
+      apiBase: 'http://localhost:3001/api'
+    }
+  },
   app: {
     head: {
       title: 'Absolutely ethical and family friendly canvas',
@@ -23,10 +27,11 @@ export default defineNuxtConfig({
     'nuxt-socket-io'
   ],
   io: {
+    server: false,
     sockets: [
       {
         name: 'home',
-        url: 'http://localhost:3000',
+        url: 'http://localhost:3001',
         default: true,
       }
     ]

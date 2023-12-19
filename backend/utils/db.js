@@ -1,6 +1,5 @@
-
-import pg from 'pg';
-import 'dotenv/config';
+import pg from "pg";
+import "dotenv/config";
 const { Pool } = pg;
 
 // const db = new Pool({
@@ -8,13 +7,12 @@ const { Pool } = pg;
 // });
 
 const db = new Pool({
-   user: "postgres",
-   host: "localhost",
-   database: "postgres",
-   password: "white",
-   port: 5432,
+  user: "postgres",
+  host: "localhost",
+  database: "postgres",
+  password: "white",
+  port: 5432,
 });
-
 
 const sql = `
 CREATE TABLE IF NOT EXISTS settings(                                                                                     
@@ -41,19 +39,17 @@ CREATE TABLE IF NOT EXISTS grid(
 `;
 
 db.connect((err) => {
+  if (err) {
+    console.log(err);
+    return;
+  }
+  console.log("[DB] CONNECTED");
+  db.query(sql, (err, res) => {
     if (err) {
-        console.log(err);
-        return
+      console.log(err);
+      return;
     }
-    console.log('[DB] CONNECTED')
-    db.query(sql, (err, res) => {
-        console.log('[DB] SETUP STARTED')
-        if (err) {
-            console.log(err);
-            return;
-        }
-        console.log('[DB] SETUP COMPLETE');
-    });
+  });
 });
 
-export default db
+export default db;
