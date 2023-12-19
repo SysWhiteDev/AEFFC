@@ -225,6 +225,8 @@ export default {
     position: relative;
     width: 100vw;
     height: 100vh;
+    height: 100dvh;
+    width: 100dvw;
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -412,7 +414,6 @@ export default {
 
 @media (max-width: 1024px) {
     .zoom-controls {
-        position: absolute;
         bottom: 10px;
         right: 10px;
         left: unset;
