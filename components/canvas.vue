@@ -393,6 +393,7 @@ export default {
     backdrop-filter: blur(4.5px);
     position: absolute;
     bottom: 10px;
+    text-align: center;
     right: 10px;
 }
 
@@ -405,6 +406,11 @@ export default {
     cursor: pointer;
     outline: none;
     user-select: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: black;
 }
 
 .zoom-controls button:hover {

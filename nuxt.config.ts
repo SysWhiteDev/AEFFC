@@ -11,7 +11,7 @@ export default defineNuxtConfig({
       title: 'Absolutely ethical and family friendly canvas',
       meta: [
         { charset: 'utf-8' },
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' },
         { hid: 'description', name: 'description', content: 'Create the best art, INVADE THEM ALL 🗣️🔥🔥' },
         { property: 'og:title', content: 'Absolutely ethical and family friendly canvas' },
         { property: 'og:description', content: 'Create the best art, INVADE THEM ALL 🗣️🔥🔥' },

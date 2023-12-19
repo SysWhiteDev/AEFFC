@@ -13,8 +13,7 @@ body {
     rgb(20, 20, 20) 88px
   );
   background-size: 56px 56px;
-  min-height: -webkit-fill-available;
-  min-height: fill-available;
+  touch-action: pan-x pan-y;
 }
 
 * {
