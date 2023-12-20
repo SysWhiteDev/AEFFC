@@ -109,7 +109,7 @@ p {
     right: 0;
     width: 100%;
     height: 100%;
-    background: black;
+    background: #1f1f1f;
     color: white;
     display: flex;
     justify-content: center;
