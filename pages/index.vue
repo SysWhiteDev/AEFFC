@@ -124,6 +124,15 @@ p {
     left: 10px;
     z-index: 1;
     width: 350px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(8px);
 }
 
 .popup .content {
@@ -134,6 +143,7 @@ p {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(4.5px);
     padding: 15px;
+    margin: 10px;
 }
 
 .popup .title {
@@ -161,25 +171,6 @@ p {
 
 .popup button:hover {
     opacity: 0.8;
-}
-
-@media (max-width: 1024px) {
-    .popup {
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        backdrop-filter: blur(8px);
-    }
-
-    .popup .content {
-        margin: 10px;
-        background: rgb(255, 255, 255, 0.9);
-    }
 }
 
 /* error */

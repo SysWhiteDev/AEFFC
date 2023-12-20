@@ -168,15 +168,18 @@ export default {
             this.isDragging = true;
         },
         handleMouseMove(event) {
+            if (this.isDragging && event.buttons == 1) {
+                this.handlePlace(event);
+            }
             if (this.isDragging && event.buttons == 4) {
                 document.body.style.cursor = 'grabbing';
                 this.$refs.canvas.style.cursor = 'grabbing';
                 this.$refs.wrapper.style.cursor = 'grabbing';
-                const deltaX = (event.clientX - this.dragStart.x) / this.zoom;
-                const deltaY = (event.clientY - this.dragStart.y) / this.zoom;
+                const deltaMoveX = (event.clientX - this.dragStart.x) / this.zoom;
+                const deltaMoveY = (event.clientY - this.dragStart.y) / this.zoom;
 
-                this.zoompos.x += deltaX;
-                this.zoompos.y += deltaY;
+                this.zoompos.x += deltaMoveX;
+                this.zoompos.y += deltaMoveY;
 
                 this.dragStart = { x: event.clientX, y: event.clientY };
             }
@@ -195,9 +198,25 @@ export default {
         handleTouchStart(event) {
             this.isTouching = true;
             this.touchStart = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+            if (this.isTouching && event.touches.length === 2) {
+                const distance = Math.sqrt(Math.pow(event.touches[0].clientX - event.touches[1].clientX, 2) + Math.pow(event.touches[0].clientY - event.touches[1].clientY, 2));
+                this.initialDistance = distance;
+                this.initialZoom = this.zoom;
+            }
         },
         handleTouchMove(event) {
-            if (this.isTouching) {
+            if (this.isTouching && event.touches.length === 1) {
+                this.handlePlace(event.touches[0]);
+            }
+            if (this.isTouching && event.touches.length === 2) {
+                // zoom
+                const distance = Math.sqrt(Math.pow(event.touches[0].clientX - event.touches[1].clientX, 2) + Math.pow(event.touches[0].clientY - event.touches[1].clientY, 2));
+                const amount = (distance - this.initialDistance) / 800;
+                if (this.zoom + (this.initialZoom + amount) > 0.15 && this.zoom + (this.initialZoom + amount) < 5) {
+                    this.zoom = this.initialZoom + amount;
+                }
+
+                // movement
                 const deltaX = (event.touches[0].clientX - this.touchStart.x) / this.zoom;
                 const deltaY = (event.touches[0].clientY - this.touchStart.y) / this.zoom;
 
