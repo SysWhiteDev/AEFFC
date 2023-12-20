@@ -1,9 +1,12 @@
 <template>
   <div>
+    <VitePwaManifest />
     <span class="branding">Made by SysWhite</span>
     <NuxtPage />
   </div>
 </template>
+
+
 
 <style scoped>
 .branding {
