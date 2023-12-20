@@ -28,7 +28,16 @@
                 <p class="maintenanceText" v-if="maintenanceText">{{ maintenanceText }}</p>
             </div>
         </div>
-        <Canvas v-if="!loading && !error && !maintenance" />
+        <div v-if="!loading && !error && !maintenance">
+            <div class="popup" v-if="popup">
+                <div class="content">
+                    <p class="title">Welcome to <b>AEFFC</b></p>
+                    <span>Please note that this website is in beta and you may find bugs and instability.</span>
+                    <button @click="popup = false"><i class="fa-solid fa-check"></i></button>
+                </div>
+            </div>
+            <Canvas />
+        </div>
     </div>
 </template>
 
@@ -40,6 +49,7 @@ const loading = ref(true);
 const error = ref(false);
 const maintenance = ref(false);
 const maintenanceText = ref("");
+const popup = ref(true);
 
 const fetchSettings = async () => {
     const res = await $fetch(`${runtimeConfig.public.apiBase}/api/getSettings`);
@@ -74,7 +84,7 @@ onMounted(async () => {
     try {
         await fetchSettings();
         if (!canvasStore.value.maintenance) {
-                fetchGrid();
+            fetchGrid();
         }
     } catch (err) {
         error.value = true;
@@ -102,6 +112,71 @@ p {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+}
+
+/* popup */
+.popup {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+    width: 300px;
+}
+
+.popup .content {
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 7px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(4.5px);
+    padding: 15px;
+}
+
+.popup .title {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.popup span {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.popup button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 30px;
+    border: none;
+    background: #dcff42;
+    color: black;
+    outline: none;
+    cursor: pointer !important;
+    z-index: 999;
+}
+
+.popup button:hover {
+    opacity: 0.8;
+}
+
+@media (max-width: 1024px) {
+    .popup {
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(8px);
+    }
+
+    .popup .content {
+        margin: 10px;
+        background: rgb(255, 255, 255, 0.9);
+    }
 }
 
 /* error */
