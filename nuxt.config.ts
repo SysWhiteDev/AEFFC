@@ -32,7 +32,7 @@ export default defineNuxtConfig({
     manifest: {
       name: 'Absolutely ethical and family friendly canvas',
       short_name: 'AEFFC',
-      theme_color: '#ffffff',
+      theme_color: '#1f1f1f',
       icons: [
         {
           "src": "windows11/SmallTile.scale-100.png",
