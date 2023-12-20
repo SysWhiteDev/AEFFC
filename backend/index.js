@@ -1,10 +1,12 @@
 import cors from "cors";
 import Express from "express";
+import compression from "compression";
 import { Server } from "socket.io";
 import utils from "./utils/utils.js";
 import { createServer } from "http";
 
 const app = Express();
+app.use(compression({ level: 9 }));
 app.use(Express.json());
 app.use(cors());
 const httpServer = createServer(app);
@@ -32,7 +34,16 @@ io.on("connection", (socket) => {
   });
   socket.on("setPlace", (data) => {
     utils.db.query(
-      "INSERT INTO grid(x, y, color) VALUES($1, $2, $3) RETURNING *;",
+      `
+      WITH deleted AS (
+        DELETE FROM grid
+        WHERE x = $1 AND y = $2
+        RETURNING *
+       )
+       INSERT INTO grid(x, y, color) VALUES($1, $2, $3) 
+       RETURNING *;
+       
+      `,
       [data.x, data.y, data.color],
       (err, res) => {
         if (err) {
