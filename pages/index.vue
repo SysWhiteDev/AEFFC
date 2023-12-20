@@ -31,8 +31,11 @@
         <div v-if="!loading && !error && !maintenance">
             <div class="popup" v-if="popup">
                 <div class="content">
-                    <p class="title">Welcome to <b>AEFFC</b></p>
-                    <span>Please note that this website is in beta and you may find bugs and instability.</span>
+                    <p class="title">Welcome to <b>Absolutely Ethical and Family Friendly Canvas</b></p>
+                    <span>
+                        <b>Rules: </b>There are no rules.<br><br>
+                        Please note that this website is in beta and you may find bugs and instability.
+                    </span>
                     <button @click="popup = false"><i class="fa-solid fa-check"></i></button>
                 </div>
             </div>
@@ -120,7 +123,7 @@ p {
     top: 10px;
     left: 10px;
     z-index: 1;
-    width: 300px;
+    width: 350px;
 }
 
 .popup .content {
@@ -144,16 +147,16 @@ p {
 }
 
 .popup button {
-    margin-top: 10px;
     padding: 5px 10px;
     border-radius: 5px;
-    font-size: 30px;
+    font-size: 25px;
     border: none;
     background: #dcff42;
     color: black;
     outline: none;
     cursor: pointer !important;
     z-index: 999;
+    margin-top: 15px;
 }
 
 .popup button:hover {

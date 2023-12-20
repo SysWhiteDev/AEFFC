@@ -49,8 +49,8 @@
             </div>
         </div>
         <div class="zoom-controls">
-            <button @click="zoomCanvas(0.1)">+</button>
-            <button @click="zoomCanvas(-0.1)">-</button>
+            <button @click="zoomCanvas(0.05)">+</button>
+            <button @click="zoomCanvas(-0.05)">-</button>
         </div>
     </div>
 </template>
@@ -130,7 +130,7 @@ export default {
             };
         },
         zoomCanvas(amount) {
-            if (this.zoom + amount > 0.15 && this.zoom + amount < 5) {
+            if (this.zoom + amount > 0.05 && this.zoom + amount < 5) {
                 this.zoom += amount * 2;
             }
         },
@@ -432,11 +432,13 @@ export default {
     position: absolute;
     top: 10px;
     right: 10px;
-    background: rgb(255, 255, 255, 0.8);
     backdrop-filter: blur(4.5px);
     border-radius: 7px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    padding: 13px 15px;
+    background-color: #FF9A8B;
+    background-image: linear-gradient(120deg, #FF9A8B 0%, #FF6A88 55%, #FF99AC 100%);
+    color: white;
+    padding: 10px 15px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -446,7 +448,7 @@ export default {
 .player-count span {
     font-weight: bold;
     text-align: center;
-    font-size: clamp(25px, 5vw, 30px);
+    font-size: clamp(15px, 5vw, 20px);
 }
 
 .player-count span>i {
