@@ -42,7 +42,7 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("userCount", io.engine.clientsCount);
   });
   socket.on("setPlace", (data) => {
-    if (data.x > maxX || data.y > maxY) return;
+    if (data.x > maxX || data.y > maxY || data.x < 0 || data.y < 0) return;
     utils.db.hset(
       "pixelgrid",
       `${data.x},${data.y}`,
