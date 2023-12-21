@@ -4,7 +4,7 @@
             @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd"
             :style="`transform: scale(${zoom}) translateX(${this.zoompos ? this.zoompos.x : 0}px) translateY(${this.zoompos ? this.zoompos.y : 0}px);`"></canvas>
         <div class="player-count">
-            <span><i class="fa-solid fa-eye"></i>{{ playercount }}</span>
+            <span><i class="fa-regular fa-eye"></i>{{ playercount }}</span>
         </div>
         <!-- <div class="timer">
             <span>3.42s</span>
@@ -459,14 +459,14 @@ export default {
     padding: 10px 15px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-around;
     text-align: center;
 }
 
 .player-count span {
     font-weight: bold;
     text-align: center;
-    font-size: clamp(15px, 5vw, 20px);
+    font-size: clamp(10px, 5vw, 15px);
 }
 
 .player-count span>i {
