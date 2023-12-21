@@ -3,7 +3,7 @@ import Express from "express";
 import compression from "compression";
 import { Server } from "socket.io";
 import utils from "./utils/utils.js";
-import "dotenv/config"
+import "dotenv/config";
 import { createServer } from "http";
 
 const app = Express();
@@ -11,6 +11,14 @@ app.use(compression({ level: 9 }));
 app.use(Express.json());
 app.use(cors());
 const httpServer = createServer(app);
+
+/* get canvas size values */
+let maxX;
+let maxY;
+utils.db.hgetall("settings", (err, reply) => {
+  maxX = reply.canvaswidth;
+  maxY = reply.canvasheight;
+});
 
 /* express */
 import getSettings from "./api/getSettings.js";
@@ -34,6 +42,7 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("userCount", io.engine.clientsCount);
   });
   socket.on("setPlace", (data) => {
+    if (data.x > maxX || data.y > maxY) return;
     utils.db.hset(
       "pixelgrid",
       `${data.x},${data.y}`,
