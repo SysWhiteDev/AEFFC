@@ -3,6 +3,7 @@ import Express from "express";
 import compression from "compression";
 import { Server } from "socket.io";
 import utils from "./utils/utils.js";
+import "dotenv/config"
 import { createServer } from "http";
 
 const app = Express();
@@ -26,36 +27,25 @@ const io = new Server(httpServer, {
 
 io.on("connection", (socket) => {
   setInterval(() => {
-    socket.broadcast.emit("userCount", io.engine.clientsCount);
+    socket.emit("userCount", io.engine.clientsCount);
   }, 1000);
   socket.on("disconnected", () => {
     console.log("DISCONNECTED");
     socket.broadcast.emit("userCount", io.engine.clientsCount);
   });
   socket.on("setPlace", (data) => {
-    utils.db.query(
-      `
-      WITH deleted AS (
-        DELETE FROM grid
-        WHERE x = $1 AND y = $2
-        RETURNING *
-       )
-       INSERT INTO grid(x, y, color) VALUES($1, $2, $3) 
-       RETURNING *;
-       
-      `,
-      [data.x, data.y, data.color],
-      (err, res) => {
-        if (err) {
-          return;
-        }
+    utils.db.hset(
+      "pixelgrid",
+      `${data.x},${data.y}`,
+      data.color,
+      function (err, response) {
+        if (err) throw err;
         socket.broadcast.emit("getPlace", data);
-        return { success: true };
       }
     );
   });
 });
 
-httpServer.listen(3001, () => {
-  console.log("[SERVER] Listening on port 3001");
+httpServer.listen(process.env.BACKEND_PORT, () => {
+  console.log(`[SERVER] Listening on port ${process.env.BACKEND_PORT}`);
 });

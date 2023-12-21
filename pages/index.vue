@@ -57,12 +57,12 @@ const popup = ref(true);
 const fetchSettings = async () => {
     const res = await $fetch(`${runtimeConfig.public.apiBase}/api/getSettings`);
     if (res && res.status === "success") {
-        canvasStore.value.width = res.data[0].canvaswidth;
-        canvasStore.value.height = res.data[0].canvasheight;
-        canvasStore.value.pixelSize = res.data[0].pixelsize;
-        canvasStore.value.maintenance = res.data[0].maintenance;
-        canvasStore.value.maintenancetext = res.data[0].maintenancetext;
-        if (canvasStore.value.maintenance) {
+        canvasStore.value.width = res.data.canvaswidth;
+        canvasStore.value.height = res.data.canvasheight;
+        canvasStore.value.pixelSize = res.data.pixelsize;
+        canvasStore.value.maintenance = res.data.maintenance;
+        canvasStore.value.maintenancetext = res.data.maintenancetext;
+        if (canvasStore.value.maintenance == "true") {
             maintenance.value = true;
             maintenanceText.value = canvasStore.value.maintenancetext;
             loading.value = false;

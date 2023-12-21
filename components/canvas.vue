@@ -83,9 +83,6 @@ export default {
             name: 'home',
             reconnection: true
         });
-        this.socket.on('connect', () => {
-            console.log('connected');
-        });
         this.socket.on('userCount', (data) => {
             this.playercount = data;
         });
@@ -119,9 +116,11 @@ export default {
                     ctx.fillRect(x, y, this.pixelSize, this.pixelSize);
                 }
             }
-            for (let data of canvasStore.value.data) {
-                ctx.fillStyle = '#' + data.color;
-                ctx.fillRect(data.x, data.y, this.pixelSize, this.pixelSize);
+            for (let key in canvasStore.value.data) {
+                let coordinates = key.split(',').map(Number);
+                let color = canvasStore.value.data[key];
+                ctx.fillStyle = '#' + color;
+                ctx.fillRect(coordinates[0], coordinates[1], this.pixelSize, this.pixelSize);
             }
         },
         handleWheel(event) {

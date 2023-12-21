@@ -4,23 +4,20 @@ import utils from "../utils/utils.js";
 const getSettings = Express.Router();
 
 getSettings.get("/", async (req, res) => {
-  try {
-    await utils.db.query("SELECT * FROM settings;", (err, row) => {
-      if (err) {
-        res.status(500).json({
-          status: "error",
-          data: err,
-        });
-      } else {
-        res.json({
-          status: "success",
-          data: row.rows,
-        });
-      }
-    });
-  } catch (error) {
-    res.status(500).json({ error: "An error occurred while fetching data" });
-  }
+  utils.db.hgetall("settings", (err, reply) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({
+        status: "error",
+        data: "An error occurred while retrieving settings",
+      });
+    } else {
+      res.json({
+        status: "success",
+        data: reply,
+      });
+    }
+  });
 });
 
 export default getSettings;
