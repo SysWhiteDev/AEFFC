@@ -3,13 +3,11 @@
         <canvas ref="canvas" @mousedown="handleMouseDown" @mousemove="handleMouseMove" @mouseup.left="handleMouseUp"
             @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd"
             :style="`transform: scale(${zoom}) translateX(${this.zoompos ? this.zoompos.x : 0}px) translateY(${this.zoompos ? this.zoompos.y : 0}px);`"></canvas>
-        <div class="player-count">
-            <span><i class="fa-regular fa-eye"></i>{{ playercount }}</span>
-        </div>
+        <playerCount />
         <!-- <div class="timer">
             <span>3.42s</span>
         </div> -->
-        <div class="color-picker">
+        <div class="color-picker" v-if="socketStore.connected">
             <div class="selected" :style="`background: #${selectedData.color};`" />
             <div class="colors">
                 <div class="row">
@@ -57,10 +55,12 @@
   
 <script>
 import canvasStore from '~/stores/canvasStore.ts';
+import socketStore from '~/stores/socketStore';
 export default {
     data() {
         return {
             canvasStore: canvasStore,
+            socketStore: socketStore,
             pixelSize: 10,
             zoom: 0.35,
             dragStart: {},
@@ -73,19 +73,13 @@ export default {
                 color: '000000',
             },
             playercount: 0,
+            socket: socketStore.socket,
         };
     },
     mounted() {
         this.$refs.wrapper.addEventListener('wheel', this.handleWheel);
         window.addEventListener('mouseup', this.handleMouseUpOutside);
         this.createCanvas();
-        this.socket = this.$nuxtSocket({
-            name: 'home',
-            reconnection: true
-        });
-        this.socket.on('userCount', (data) => {
-            this.playercount = data;
-        });
         this.socket
             .on('getPlace', (data, cb) => {
                 const canvas = this.$refs.canvas;
@@ -134,32 +128,34 @@ export default {
             }
         },
         async handlePlace(event) {
-            const canvas = this.$refs.canvas;
-            const ctx = canvas.getContext('2d');
+            if (socketStore.connected.value) {
+                const canvas = this.$refs.canvas;
+                const ctx = canvas.getContext('2d');
 
-            const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
 
-            const pixelX = Math.floor((event.clientX - rect.left) * scaleX / this.pixelSize);
-            const pixelY = Math.floor((event.clientY - rect.top) * scaleY / this.pixelSize);
+                const pixelX = Math.floor((event.clientX - rect.left) * scaleX / this.pixelSize);
+                const pixelY = Math.floor((event.clientY - rect.top) * scaleY / this.pixelSize);
 
-            const pixelData = ctx.getImageData(pixelX * this.pixelSize, pixelY * this.pixelSize, 1, 1).data;
+                const pixelData = ctx.getImageData(pixelX * this.pixelSize, pixelY * this.pixelSize, 1, 1).data;
 
-            if (pixelData[3] !== 0 || pixelData[3] !== 255) {
-                canvasStore.value.localData.push({
-                    x: pixelX * this.pixelSize,
-                    y: pixelY * this.pixelSize,
-                    color: this.selectedData.color,
-                });
-                ctx.fillStyle = `#${this.selectedData.color}`;
-                ctx.fillRect(pixelX * this.pixelSize, pixelY * this.pixelSize, this.pixelSize, this.pixelSize);
-                this.socket.emit('setPlace', {
-                    x: pixelX * this.pixelSize,
-                    y: pixelY * this.pixelSize,
-                    color: this.selectedData.color,
-                })
-            }
+                if (pixelData[3] !== 0 || pixelData[3] !== 255) {
+                    canvasStore.value.localData.push({
+                        x: pixelX * this.pixelSize,
+                        y: pixelY * this.pixelSize,
+                        color: this.selectedData.color,
+                    });
+                    ctx.fillStyle = `#${this.selectedData.color}`;
+                    ctx.fillRect(pixelX * this.pixelSize, pixelY * this.pixelSize, this.pixelSize, this.pixelSize);
+                    this.socket.emit('setPlace', {
+                        x: pixelX * this.pixelSize,
+                        y: pixelY * this.pixelSize,
+                        color: this.selectedData.color,
+                    })
+                }
+            };
         },
         handleMouseDown(event) {
             this.dragStart = { x: event.clientX, y: event.clientY };
@@ -442,41 +438,6 @@ export default {
         bottom: 10px;
         right: 10px;
         left: unset;
-    }
-}
-
-/* player count */
-.player-count {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    backdrop-filter: blur(4.5px);
-    border-radius: 7px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    background-color: #FF9A8B;
-    background-image: linear-gradient(120deg, #FF9A8B 0%, #FF6A88 55%, #FF99AC 100%);
-    color: white;
-    padding: 10px 15px;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    text-align: center;
-}
-
-.player-count span {
-    font-weight: bold;
-    text-align: center;
-    font-size: clamp(10px, 5vw, 15px);
-}
-
-.player-count span>i {
-    margin-right: 10px;
-}
-
-@media (max-width: 1024px) {
-    .player-count {
-        top: 10px;
-        right: 10px;
     }
 }
 

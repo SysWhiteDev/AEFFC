@@ -45,8 +45,11 @@
 </template>
 
 <script setup>
-const runtimeConfig = useRuntimeConfig();
 import canvasStore from '~/stores/canvasStore';
+import socketStore from '~/stores/socketStore';
+
+const runtimeConfig = useRuntimeConfig();
+const ctx = useNuxtApp();
 
 const loading = ref(true);
 const error = ref(false);
@@ -67,10 +70,26 @@ const fetchSettings = async () => {
             maintenanceText.value = canvasStore.value.maintenancetext;
             loading.value = false;
         }
-        await fetchGrid();
     } else {
         error.value = true;
     }
+}
+
+const connectWebsocket = () => {
+    socketStore.socket = ctx.$nuxtSocket({
+        name: 'home',
+    });
+    setInterval(() => {
+        socketStore.connected.value = socketStore.socket.connected;
+    }, 0);
+    setInterval(() => {
+        if (!socketStore.socket.connected) {
+            socketStore.socket = ctx.$nuxtSocket({
+                name: 'home',
+            });
+            fetchGrid();
+        }
+    }, 5000);
 }
 
 const fetchGrid = async () => {
@@ -83,13 +102,17 @@ const fetchGrid = async () => {
     }
 }
 
+
+
 onMounted(async () => {
     try {
-        await fetchSettings();
+        fetchSettings();
         if (!canvasStore.value.maintenance) {
+            connectWebsocket();
             fetchGrid();
         }
     } catch (err) {
+        console.log(err)
         error.value = true;
     }
 });

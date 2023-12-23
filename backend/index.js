@@ -23,7 +23,7 @@ utils.db.hgetall("settings", (err, reply) => {
 /* express */
 app.get("/", (req, res) => {
   res.send("AEFFC API v0.1 by SysWhite");
-})
+});
 
 import getSettings from "./api/getSettings.js";
 app.use("/api/getSettings", getSettings);
@@ -37,15 +37,25 @@ const io = new Server(httpServer, {
   },
 });
 
+function forceDisconnect(socket) {
+  if (socket) {
+    socket.disconnect();
+    socket.broadcast.emit("userCount", io.engine.clientsCount);
+  }
+}
+
 io.on("connection", (socket) => {
   utils.db.set("ws_active_connections", io.engine.clientsCount);
-  socket.broadcast.emit("userCount", io.engine.clientsCount);
   socket.emit("userCount", io.engine.clientsCount);
+  setInterval(() => {
+    socket.emit("userCount", io.engine.clientsCount);
+  }, 1000);
   socket.on("disconnect", () => {
     socket.broadcast.emit("userCount", io.engine.clientsCount);
     utils.db.set("ws_active_connections", io.engine.clientsCount);
   });
   socket.on("setPlace", (data) => {
+    // forceDisconnect(socket);
     if (data.x > maxX || data.y > maxY || data.x < 0 || data.y < 0) return;
     utils.db.hset(
       "pixelgrid",
