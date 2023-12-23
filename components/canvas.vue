@@ -80,7 +80,7 @@ export default {
         this.$refs.wrapper.addEventListener('wheel', this.handleWheel);
         window.addEventListener('mouseup', this.handleMouseUpOutside);
         this.createCanvas();
-        this.socket
+        socketStore.socket
             .on('getPlace', (data, cb) => {
                 const canvas = this.$refs.canvas;
                 const ctx = canvas.getContext('2d', { willReadFrequently: true });
@@ -149,7 +149,7 @@ export default {
                     });
                     ctx.fillStyle = `#${this.selectedData.color}`;
                     ctx.fillRect(pixelX * this.pixelSize, pixelY * this.pixelSize, this.pixelSize, this.pixelSize);
-                    this.socket.emit('setPlace', {
+                    socketStore.socket.emit('setPlace', {
                         x: pixelX * this.pixelSize,
                         y: pixelY * this.pixelSize,
                         color: this.selectedData.color,
