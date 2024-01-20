@@ -4,9 +4,10 @@
             @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd"
             :style="`transform: scale(${zoom}) translateX(${this.zoompos ? this.zoompos.x : 0}px) translateY(${this.zoompos ? this.zoompos.y : 0}px);`"></canvas>
         <playerCount />
-        <!-- <div class="timer">
-            <span>3.42s</span>
-        </div> -->
+        <div class="timer" ref="timer">
+            <i class="fa-regular fa-clock"></i>
+            <span>{{ timeOut.toFixed(2) }}s</span>
+        </div>
         <div class="color-picker" v-if="socketStore.connected">
             <div class="selected" :style="`background: #${selectedData.color};`" />
             <div class="colors">
@@ -61,6 +62,7 @@ export default {
         return {
             canvasStore: canvasStore,
             socketStore: socketStore,
+            timeOut: 0,
             pixelSize: 10,
             zoom: 0.35,
             dragStart: {},
@@ -80,6 +82,13 @@ export default {
         this.$refs.wrapper.addEventListener('wheel', this.handleWheel);
         window.addEventListener('mouseup', this.handleMouseUpOutside);
         this.createCanvas();
+        setInterval(() => {
+            if (this.timeOut <= 0) {
+                this.timeOut = 0;
+            } else {
+                this.timeOut -= 0.01;
+            }
+        }, 10);
         socketStore.socket
             .on('getPlace', (data, cb) => {
                 const canvas = this.$refs.canvas;
@@ -129,6 +138,15 @@ export default {
         },
         async handlePlace(event) {
             if (socketStore.connected.value) {
+                if (this.timeOut !== 0) {
+                    this.$refs.timer.classList.add('timedOut');
+                    setTimeout(() => {
+                        this.$refs.timer.classList.remove('timedOut');
+                    }, 1000)
+                    return;
+                } else {
+                    this.timeOut += 5;
+                }
                 const canvas = this.$refs.canvas;
                 const ctx = canvas.getContext('2d');
 
@@ -259,16 +277,43 @@ export default {
     backdrop-filter: blur(4.5px);
     border-radius: 7px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    padding: 13px 15px;
+    padding: 10px 15px;
+    height: 15px;
     position: absolute;
     bottom: 10px;
     left: 10px;
 }
 
+.timer i {
+    margin-right: 7px;
+}
 .timer span {
     /* font-weight: bold; */
+    margin-top: 2px;
     text-align: center;
-    font-size: clamp(25px, 5vw, 40px);
+    font-size: clamp(10px, 5vw, 15px);
+}
+.timedOut {
+    background: #FF9A8B; 
+    animation: 1s timedOut infinite;
+}
+
+@keyframes timedOut {
+    0% {
+        background: rgb(255, 255, 255, 0.8);
+    }
+    20% {
+        background: #FF9A8B
+    }
+    30% {
+        background: rgb(255, 255, 255, 0.8);
+    }
+    60% {
+        background: #FF9A8B
+    }
+    100% {
+        background: rgb(255, 255, 255, 0.8);
+    }
 }
 
 @media (max-width: 1024px) {
