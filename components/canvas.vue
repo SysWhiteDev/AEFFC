@@ -294,7 +294,7 @@ export default {
     font-size: clamp(10px, 5vw, 15px);
 }
 .timedOut {
-    background: #FF9A8B; 
+    background: #ff5c43; 
     animation: 1s timedOut infinite;
 }
 
@@ -303,13 +303,13 @@ export default {
         background: rgb(255, 255, 255, 0.8);
     }
     20% {
-        background: #FF9A8B
+        background: #ff5c43
     }
     30% {
         background: rgb(255, 255, 255, 0.8);
     }
     60% {
-        background: #FF9A8B
+        background: #ff5c43
     }
     100% {
         background: rgb(255, 255, 255, 0.8);
