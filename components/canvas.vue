@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper" ref="wrapper" v-if="!(canvasStore.width == 0 && canvasStore.height == 0)">
+    <div class="wrapper" ref="wrapper">
         <canvas ref="canvas" @mousedown="handleMouseDown" @mousemove="handleMouseMove" @mouseup.left="handleMouseUp"
             @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd"
             :style="`transform: scale(${zoom}) translateX(${this.zoompos ? this.zoompos.x : 0}px) translateY(${this.zoompos ? this.zoompos.y : 0}px);`"></canvas>

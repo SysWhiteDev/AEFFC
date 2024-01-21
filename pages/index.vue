@@ -39,7 +39,7 @@
                     <button @click="popup = false"><i class="fa-solid fa-check"></i></button>
                 </div>
             </div>
-            <Canvas />
+            <Canvas v-if="!(canvasStore.width == 0 && canvasStore.height == 0)" />
         </div>
     </div>
 </template>
