@@ -1,13 +1,13 @@
 <template>
-    <div class="wrapper" ref="wrapper">
+    <div class="wrapper" ref="wrapper" v-if="!(canvasStore.width == 0 && canvasStore.height == 0)">
         <canvas ref="canvas" @mousedown="handleMouseDown" @mousemove="handleMouseMove" @mouseup.left="handleMouseUp"
             @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd"
             :style="`transform: scale(${zoom}) translateX(${this.zoompos ? this.zoompos.x : 0}px) translateY(${this.zoompos ? this.zoompos.y : 0}px);`"></canvas>
         <playerCount />
-        <div class="timer" ref="timer">
+        <!--<div class="timer" ref="timer">
             <i class="fa-regular fa-clock"></i>
             <span>{{ timeOut.toFixed(2) }}s</span>
-        </div>
+        </div>-->
         <div class="color-picker" v-if="socketStore.connected">
             <div class="selected" :style="`background: #${selectedData.color};`" />
             <div class="colors">
@@ -145,7 +145,7 @@ export default {
                     }, 1000)
                     return;
                 } else {
-                    this.timeOut += 5;
+                    this.timeOut += 0;
                 }
                 const canvas = this.$refs.canvas;
                 const ctx = canvas.getContext('2d');
